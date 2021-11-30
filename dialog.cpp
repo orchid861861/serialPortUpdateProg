@@ -7,11 +7,12 @@ Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Dialog)
 {
+    ui->setupUi(this);
     QList<QSerialPortInfo> comList(QSerialPortInfo().availablePorts());
     for(int i = 0;i<comList.count();i++)
         ui->comboBox->addItem(comList.at(i).portName());
 
-    ui->setupUi(this);
+
 }
 
 Dialog::~Dialog()
