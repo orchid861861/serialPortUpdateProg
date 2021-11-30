@@ -11,7 +11,7 @@ class SerialPort : public QSerialPort
 public:
     SerialPort();
     void InitSerialPort(const QSerialPortInfo &serialPortInfo);
-    
+
 };
 
 #endif // SERIALPORT_H
