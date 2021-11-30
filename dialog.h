@@ -14,7 +14,9 @@ class Dialog : public QDialog
 public:
     Dialog(QWidget *parent = nullptr);
     ~Dialog();
-
+public slots:
+    void addSerialPorts(QString comPort);
+    void removeSerialPorts(QString comPort);
 private:
     Ui::Dialog *ui;
 };

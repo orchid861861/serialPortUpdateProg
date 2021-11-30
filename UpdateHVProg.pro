@@ -11,10 +11,12 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     dialog.cpp \
+    mynativeeventfilter.cpp \
     serialport.cpp
 
 HEADERS += \
     dialog.h \
+    mynativeeventfilter.h \
     serialport.h
 
 FORMS += \
