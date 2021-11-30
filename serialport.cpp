@@ -4,15 +4,12 @@ SerialPort::SerialPort():QSerialPort()
 {
     
 }
-<<<<<<< HEAD
- void SerialPort::InitSerialPort(const QSerialPortInfo &serialPortInfo)
- {
 
- }
-=======
-void InitSerialPort(const QSerialPortInfo &serialPortInfo)
+void SerialPort::InitSerialPort(QString port_name)
 {
-
-
+    setPortName(port_name);
+    setBaudRate(QSerialPort::Baud115200);
+    setStopBits(QSerialPort::OneStop);
+    setParity(QSerialPort::NoParity);
 }
->>>>>>> 161c40588817ea029f21ae4139d4cda7b8f95cdf
+

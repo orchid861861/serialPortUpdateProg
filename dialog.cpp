@@ -10,13 +10,16 @@ Dialog::Dialog(QWidget *parent)
 {
     ui->setupUi(this);
 
-<<<<<<< HEAD
-=======
-    QList<QSerialPortInfo> comList(QSerialPortInfo().availablePorts());
+    comList=QSerialPortInfo().availablePorts();
     foreach(const QSerialPortInfo info,comList)
         ui->comboBox->addItem(info.portName());
+    port = new SerialPort();
 
->>>>>>> 161c40588817ea029f21ae4139d4cda7b8f95cdf
+    if(!comList.empty())
+        port->InitSerialPort(ui->comboBox->currentText());
+    connect(ui->comboBox,&QComboBox::currentTextChanged,this,&Dialog::setCurrentSerialPortName);
+
+
 }
 
 Dialog::~Dialog()
@@ -28,10 +31,23 @@ void Dialog::addSerialPorts(QString comPort)
 {
     if(ui->comboBox->findText(comPort) == -1)
         ui->comboBox->addItem(comPort);
+
+    if(!comList.empty())
+        port->InitSerialPort(ui->comboBox->currentText());
+
 }
 void Dialog::removeSerialPorts(QString comPort)
 {
     int index = ui->comboBox->findText(comPort);
     if(index !=-1)
          ui->comboBox->removeItem(index);
+
+    if(!comList.empty())
+        port->InitSerialPort(ui->comboBox->currentText());
+
 }
+ void Dialog::setCurrentSerialPortName(QString port_name)
+ {
+     if(!comList.empty())
+         port->InitSerialPort(port_name);
+ }

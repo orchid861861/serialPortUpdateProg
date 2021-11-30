@@ -10,7 +10,8 @@ class SerialPort : public QSerialPort
     Q_OBJECT
 public:
     SerialPort();
-    void InitSerialPort(const QSerialPortInfo &serialPortInfo);
+    void InitSerialPort(QString port_name);
+
 
 };
 
