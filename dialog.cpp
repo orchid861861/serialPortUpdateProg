@@ -22,6 +22,7 @@ Dialog::Dialog(QWidget *parent)
         clearComPortConfig();
     connect(ui->comboBox,&QComboBox::currentTextChanged,this,&Dialog::setCurrentSerialPortName);
 
+    setFocusPolicy(Qt::StrongFocus);
 
 }
 
@@ -56,20 +57,25 @@ void Dialog::removeSerialPorts(QString comPort)
 }
  void Dialog::setCurrentSerialPortName(QString port_name)
  {
-     if(ui->comboBox->count())
+     if(ui->comboBox->count())//ui 显示更新
      {
-         port->InitSerialPort(port_name);
+         port->InitSerialPort(port_name); //串口设置更新
          updateComPortConfig();
      }
      else
+     {
          clearComPortConfig();
+
+     }
 
  }
 
 void Dialog::on_pushButton_clicked() //open port
 {
-    if(!port->open(QIODevice::ReadWrite))
-        QMessageBox(QMessageBox::Warning,QString("COMINFO"),QString("open comport failed!")).exec();
+    if(port->portName().isEmpty())
+        QMessageBox(QMessageBox::Warning,QString("COMINFO"),QString("open comport not exist!")).exec();
+    else if(!port->open(QIODevice::ReadWrite))
+        QMessageBox(QMessageBox::Warning,QString("COMINFO"),QString("already opened,open comport failed!")).exec();
     else
     {
         port->clear();
@@ -84,7 +90,12 @@ void Dialog::on_pushButton_2_clicked() //closed port
 
 }
 
-void Dialog::on_pushButton_3_clicked()//send data
+void Dialog::on_pushButton_3_clicked()//download
 {
     port->write("hello world!");
+}
+
+void Dialog::on_pushButton_4_clicked()//upoload
+{
+
 }
