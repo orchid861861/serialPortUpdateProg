@@ -16,10 +16,13 @@ class Dialog : public QDialog
 public:
     Dialog(QWidget *parent = nullptr);
     ~Dialog();
+    void updateComPortConfig();
+    void clearComPortConfig();
 public slots:
     void addSerialPorts(QString comPort);
     void removeSerialPorts(QString comPort);
     void setCurrentSerialPortName(QString port_name);
+
 private:
     Ui::Dialog *ui;
     SerialPort *port;
