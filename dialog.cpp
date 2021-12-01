@@ -1,8 +1,6 @@
 #include "dialog.h"
 #include "ui_dialog.h"
-#include "serialport.h"
-#include <QList>
-#include "mynativeeventfilter.h"
+
 
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
@@ -67,3 +65,26 @@ void Dialog::removeSerialPorts(QString comPort)
          clearComPortConfig();
 
  }
+
+void Dialog::on_pushButton_clicked() //open port
+{
+    if(!port->open(QIODevice::ReadWrite))
+        QMessageBox(QMessageBox::Warning,QString("COMINFO"),QString("open comport failed!")).exec();
+    else
+    {
+        port->clear();
+        ui->comboBox->setDisabled(true);
+    }
+}
+
+void Dialog::on_pushButton_2_clicked() //closed port
+{
+    port->close();
+    ui->comboBox->setDisabled(false);
+
+}
+
+void Dialog::on_pushButton_3_clicked()//send data
+{
+    port->write("hello world!");
+}

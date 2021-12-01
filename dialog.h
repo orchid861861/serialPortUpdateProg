@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include "serialport.h"
+#include "mynativeeventfilter.h"
+#include <QMessageBox>
 #include <QList>
 
 QT_BEGIN_NAMESPACE
@@ -22,6 +24,13 @@ public slots:
     void addSerialPorts(QString comPort);
     void removeSerialPorts(QString comPort);
     void setCurrentSerialPortName(QString port_name);
+
+private slots:
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
 
 private:
     Ui::Dialog *ui;
