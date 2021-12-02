@@ -14,8 +14,8 @@ public:
     myNativeEventFilter();
     bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
 signals:
-    void addPort(QString comPort);
-    void removePort(QString comPort);
+    void addPort(QString& comPort);
+    void removePort(QString& comPort);
 };
 
 #endif // MYNATIVEEVENTFILTER_H

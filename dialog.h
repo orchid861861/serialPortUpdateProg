@@ -21,9 +21,9 @@ public:
     void updateComPortConfig();
     void clearComPortConfig();
 public slots:
-    void addSerialPorts(QString comPort);
-    void removeSerialPorts(QString comPort);
-    void setCurrentSerialPortName(QString port_name);
+    void addSerialPorts(QString& comPort);
+    void removeSerialPorts(QString& comPort);
+    void setCurrentSerialPortName(const QString& port_name);
 
 private slots:
     void on_pushButton_clicked();

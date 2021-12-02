@@ -13,5 +13,6 @@ void SerialPort::InitSerialPort(QString port_name)
     setStopBits(QSerialPort::OneStop);
     setParity(QSerialPort::NoParity);
 
+
 }
 

@@ -3,7 +3,7 @@
 
 #include <QSerialPort>
 #include <QSerialPortInfo>
-
+#include <QString>
 
 class SerialPort : public QSerialPort
 {
