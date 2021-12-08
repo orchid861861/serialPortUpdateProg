@@ -1,6 +1,6 @@
 #include "dialog.h"
 #include "ui_dialog.h"
-
+#include <QByteArray>
 
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
@@ -8,9 +8,15 @@ Dialog::Dialog(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->update_btn->setDisabled(false);
+    ui->download_btn->setDisabled(false);
+    ui->upload_btn->setDisabled(false);
+    ui->exit_btn->setDisabled(false);
+
     comList=QSerialPortInfo().availablePorts();
     foreach(const QSerialPortInfo info,comList)
         ui->comboBox->addItem(info.portName());
+
     port = new SerialPort();
 
     if(!comList.empty())
@@ -56,34 +62,30 @@ void Dialog::removeSerialPorts(QString& comPort)
     {
         port->close();
         ui->comboBox->setDisabled(false);
-
     }
     int index = ui->comboBox->findText(comPort);
     if(index !=-1)
          ui->comboBox->removeItem(index);
-
-
 
 }
 
  void Dialog::setCurrentSerialPortName(const QString& port_name)
  {
      port->InitSerialPort(port_name); //串口设置更新
+
      if(ui->comboBox->count())//ui 显示更新
      {
          updateComPortConfig();
      }
      else
      {
-         clearComPortConfig();
-
+       clearComPortConfig();
      }
 
- }
+}
 
-void Dialog::on_pushButton_clicked() //open port
+void Dialog::on_open_port_btn_clicked() //open port
 {
-
     if(port->portName().isEmpty())
         QMessageBox(QMessageBox::Warning,QString("COMINFO"),QString("open comport not exist!")).exec();
     else if(!port->open(QIODevice::ReadWrite))
@@ -95,19 +97,101 @@ void Dialog::on_pushButton_clicked() //open port
     }
 }
 
-void Dialog::on_pushButton_2_clicked() //closed port
+void Dialog::on_close_port_btn_clicked() //closed port
 {
     port->close();
     ui->comboBox->setDisabled(false);
-
 }
 
-void Dialog::on_pushButton_3_clicked()//download
+
+void Dialog::on_update_btn_clicked()
 {
-    port->write("hello world!");
+   port->setBaudRate(QSerialPort::Baud19200);
+
+   QByteArray updCommand;
+   updCommand.resize(9);
+   updCommand[0]=0x02;
+   updCommand[1]=0x53;
+   updCommand[2]=0x46;
+   updCommand[3]=0x55;
+   updCommand[4]=0x20;
+   updCommand[5]=0x01;
+   updCommand[6]=0x00;
+   updCommand[7]=0x01;
+   updCommand[8]=0xF8;
+
+    char ack = 0x06;
+    QByteArray rev_c;
+
+    if(9 == port->write(updCommand))
+    {
+        if(port->waitForReadyRead())
+        {
+            rev_c = port->read(1);
+            if(rev_c.compare(&ack) == 0)
+            {
+                ui->update_btn->setDisabled(true);
+                ui->download_btn->setDisabled(false);
+                ui->upload_btn->setDisabled(false);
+                ui->exit_btn->setDisabled(false);
+            }
+        }
+        else
+        {
+            QMessageBox(QMessageBox::Warning,QString("INFO"),QString("Recieve no data !")).exec();
+        }
+    }
+    else
+    {
+         QMessageBox(QMessageBox::Warning,QString("INFO"),QString("send update command failed!")).exec();
+    }
 }
 
-void Dialog::on_pushButton_4_clicked()//upoload
+void Dialog::on_exit_btn_clicked()
+{
+    port->setBaudRate(QSerialPort::Baud115200);
+
+    QByteArray extCommand;
+    extCommand.resize(4);
+    extCommand[0]=0x45;
+    extCommand[1]=0x58;
+    extCommand[2]=0x49;
+    extCommand[3]=0x54;
+
+    char ack = 0x06;
+    QByteArray rev_c;
+
+    if(4 == port->write(extCommand))
+    {
+        if(port->waitForReadyRead())
+        {
+            rev_c = port->read(1);
+            if(rev_c.compare(&ack) == 0)
+            {
+                ui->update_btn->setDisabled(false);
+                ui->download_btn->setDisabled(true);
+                ui->upload_btn->setDisabled(true);
+                ui->exit_btn->setDisabled(true);
+            }
+        }
+        else
+        {
+            QMessageBox(QMessageBox::Warning,QString("INFO"),QString("Recieve no data !")).exec();
+        }
+    }
+    else
+    {
+         QMessageBox(QMessageBox::Warning,QString("INFO"),QString("send exit command failed!")).exec();
+    }
+
+}
+
+void Dialog::on_download_btn_clicked()
+{
+     port->write("hello world!");
+}
+
+void Dialog::on_upload_btn_clicked()
 {
 
 }

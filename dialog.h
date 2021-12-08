@@ -26,13 +26,17 @@ public slots:
     void setCurrentSerialPortName(const QString& port_name);
 
 private slots:
-    void on_pushButton_clicked();
+    void on_open_port_btn_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_close_port_btn_clicked();
 
-    void on_pushButton_3_clicked();
+    void on_update_btn_clicked();
 
-    void on_pushButton_4_clicked();
+    void on_exit_btn_clicked();
+
+    void on_download_btn_clicked();
+
+    void on_upload_btn_clicked();
 
 private:
     Ui::Dialog *ui;
