@@ -2,6 +2,7 @@
 #include "ui_dialog.h"
 #include <QByteArray>
 
+
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Dialog)
@@ -134,6 +135,7 @@ void Dialog::on_update_btn_clicked()
                 ui->download_btn->setDisabled(false);
                 ui->upload_btn->setDisabled(false);
                 ui->exit_btn->setDisabled(false);
+                port->setBaudRate(QSerialPort::Baud115200);
             }
         }
         else
@@ -149,8 +151,6 @@ void Dialog::on_update_btn_clicked()
 
 void Dialog::on_exit_btn_clicked()
 {
-    port->setBaudRate(QSerialPort::Baud115200);
-
     QByteArray extCommand;
     extCommand.resize(4);
     extCommand[0]=0x45;
@@ -188,7 +188,46 @@ void Dialog::on_exit_btn_clicked()
 
 void Dialog::on_download_btn_clicked()
 {
-     port->write("hello world!");
+    FileDialog fileSel(this);
+    if( QDialog::Accepted == fileSel.exec())
+    {
+        QByteArray dwnCommand;
+        dwnCommand.resize(4);
+        dwnCommand[0]=0x45;
+        dwnCommand[1]=0x58;
+        dwnCommand[2]=0x49;
+        dwnCommand[3]=0x54;
+
+        char ack = 0x06;
+        //char rdy = 0x43;
+
+        QByteArray rev_c;
+
+        if(4 == port->write(dwnCommand))
+        {
+            if(port->waitForReadyRead())
+            {
+                rev_c = port->read(1);
+                if(rev_c.compare(&ack) == 0)
+                {
+
+                    ui->update_btn->setDisabled(true);
+                    ui->download_btn->setDisabled(true);
+                    ui->upload_btn->setDisabled(true);
+                    ui->exit_btn->setDisabled(true);
+
+                }
+            }
+            else
+            {
+                QMessageBox(QMessageBox::Warning,QString("INFO"),QString("Recieve no data !")).exec();
+            }
+        }
+        else
+        {
+             QMessageBox(QMessageBox::Warning,QString("INFO"),QString("send exit command failed!")).exec();
+        }
+    }
 }
 
 void Dialog::on_upload_btn_clicked()

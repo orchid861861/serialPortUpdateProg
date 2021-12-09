@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include <dbt.h>
 
-class myNativeEventFilter : public QWidget,public QAbstractNativeEventFilter //先继承QWidget,否则报错。
+class myNativeEventFilter : public QWidget,public QAbstractNativeEventFilter //fist QWidget,otherwise error
 {
     Q_OBJECT
 public:

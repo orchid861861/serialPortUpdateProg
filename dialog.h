@@ -6,6 +6,7 @@
 #include "mynativeeventfilter.h"
 #include <QMessageBox>
 #include <QList>
+#include "filedialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
