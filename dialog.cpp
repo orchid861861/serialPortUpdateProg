@@ -151,6 +151,7 @@ void Dialog::on_update_btn_clicked()
 
 void Dialog::on_exit_btn_clicked()
 {
+    port->setBaudRate(QSerialPort::Baud115200);
     QByteArray extCommand;
     extCommand.resize(4);
     extCommand[0]=0x45;
@@ -193,10 +194,10 @@ void Dialog::on_download_btn_clicked()
     {
         QByteArray dwnCommand;
         dwnCommand.resize(4);
-        dwnCommand[0]=0x45;
-        dwnCommand[1]=0x58;
-        dwnCommand[2]=0x49;
-        dwnCommand[3]=0x54;
+        dwnCommand[0]=0x44;
+        dwnCommand[1]=0x57;
+        dwnCommand[2]=0x4C;
+        dwnCommand[3]=0x44;
 
         char ack = 0x06;
         //char rdy = 0x43;
@@ -232,5 +233,36 @@ void Dialog::on_download_btn_clicked()
 
 void Dialog::on_upload_btn_clicked()
 {
+    QByteArray extCommand;
+    extCommand.resize(4);
+    extCommand[0]=0x55;
+    extCommand[1]=0x50;
+    extCommand[2]=0x44;
+    extCommand[3]=0x54;
 
+    char ack = 0x06;
+    QByteArray rev_c;
+
+    if(4 == port->write(extCommand))
+    {
+        if(port->waitForReadyRead())
+        {
+            rev_c = port->read(1);
+            if(rev_c.compare(&ack) == 0)
+            {
+                ui->update_btn->setDisabled(false);
+                ui->download_btn->setDisabled(true);
+                ui->upload_btn->setDisabled(true);
+                ui->exit_btn->setDisabled(true);
+            }
+        }
+        else
+        {
+            QMessageBox(QMessageBox::Warning,QString("INFO"),QString("Recieve no data !")).exec();
+        }
+    }
+    else
+    {
+         QMessageBox(QMessageBox::Warning,QString("INFO"),QString("send exit command failed!")).exec();
+    }
 }
